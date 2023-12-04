@@ -1,6 +1,7 @@
 # Running
 Для запуска введите команды по очереди в консоль: `mvn package -DskipTests`, `docker-compose up` 
 # Документация к контроллерам
+Для просмотра более наглядного пример после запуска проекта перейдите по ссылке http://localhost:8080/swagger-ui/#/task-controller
 # Регистрация и авторизация
 `POST localhost:8080/api/auth/signup`
 ```
@@ -36,17 +37,17 @@
     "description": "ta333s3333k2"
 }
 ```
-`POST localhost:8080/userUpdateExecuter/1/2`
-`DELETE localhost:8080/userDeleteTask/1`
-`POST localhost:8080/addComments/1`
+`POST localhost:8080/userUpdateExecuter/1/2`<br />
+`DELETE localhost:8080/userDeleteTask/1`<br />
+`POST localhost:8080/addComments/1`<br />
 ```
 {
     "textComments": "hello"
 }
 ```
-`GET localhost:8080/userDeleteTask/1`
-`GET localhost:8080/GetUserTask/1?offset=0&limit=10`
-`GET localhost:8080/GetAllTaskByEmail/?offset=0&limit=10&email=admin@gmail.com`
-`GET localhost:8080/GetAllTaskByEmailExecuter/?offset=0&limit=10&email=333@gmail.com`
+`GET localhost:8080/userDeleteTask/1`<br />
+`GET localhost:8080/GetUserTask/1?offset=0&limit=10`<br />
+`GET localhost:8080/GetAllTaskByEmail/?offset=0&limit=10&email=admin@gmail.com`<br />
+`GET localhost:8080/GetAllTaskByEmailExecuter/?offset=0&limit=10&email=333@gmail.com`<br />
 
 

@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 public class UserTask {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long id;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "creator_id")
@@ -25,13 +24,9 @@ public class UserTask {
     @JoinColumn(name = "executor_id")
     private User userExecutor;
     @Enumerated(EnumType.STRING)
-    @NotBlank
     private Prioritie prioritie;
     @Enumerated(EnumType.STRING)
-    @NotBlank
     private Status status;
-    @NotBlank
     private String heading;
-    @NotBlank
     private String description;
 }

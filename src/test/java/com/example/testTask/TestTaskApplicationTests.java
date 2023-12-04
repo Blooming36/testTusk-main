@@ -24,48 +24,47 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class TestTaskApplicationTests {
-	@Autowired
-	private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@Test
-	public void testRegisterUser() throws Exception {
-		SignupRequest signupRequest = new SignupRequest("email2222@example.com", Collections.singleton("user"), "2002");
-		mockMvc.perform(post("/api/auth/signup")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(asJsonString(signupRequest)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message", isA(String.class)));
+    @Test
+    public void testRegisterUser() throws Exception {
+        SignupRequest signupRequest = new SignupRequest("email2222@example.com", Collections.singleton("user"), "2002");
+        mockMvc.perform(post("/api/auth/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(signupRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message", isA(String.class)));
 
-		User savedUser = userService.findByEmail(signupRequest.getEmail())
-				.orElseThrow(() -> new AssertionError("User not found in the database"));
-		Assert.assertThat(savedUser.getEmail(), is(signupRequest.getEmail()));
+        User savedUser = userService.findByEmail(signupRequest.getEmail())
+                .orElseThrow(() -> new AssertionError("User not found in the database"));
+        Assert.assertThat(savedUser.getEmail(), is(signupRequest.getEmail()));
 
-	}
-	@Test
-	public void testSignInUser() throws Exception {
-		LoginRequest loginRequest = new LoginRequest("email2222@example.com","2002");
-		User user = userService.findByEmail(loginRequest.getEmail()).get();
-		mockMvc.perform(post("/api/auth/signin")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(asJsonString(loginRequest)))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.email", is(user.getEmail())))
-				.andExpect(jsonPath("$.id", is(user.getId().intValue())));
-	}
+    }
 
-	private String asJsonString(Object obj) {
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			return objectMapper.writeValueAsString(obj);
-		} catch (com.fasterxml.jackson.core.JsonProcessingException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    @Test
+    public void testSignInUser() throws Exception {
+        LoginRequest loginRequest = new LoginRequest("email2222@example.com", "2002");
+        User user = userService.findByEmail(loginRequest.getEmail()).get();
+        mockMvc.perform(post("/api/auth/signin")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(loginRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email", is(user.getEmail())))
+                .andExpect(jsonPath("$.id", is(user.getId().intValue())));
+    }
 
-
+    private String asJsonString(Object obj) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.writeValueAsString(obj);
+        } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 }

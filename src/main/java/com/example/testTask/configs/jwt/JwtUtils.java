@@ -13,36 +13,36 @@ import java.util.Date;
 @Component
 public class JwtUtils {
 
-	@Value("${app.jwtSecret}")
-	private String jwtSecret;
+    @Value("${app.jwtSecret}")
+    private String jwtSecret;
 
-	@Value("${app.jwtExpirationMs}")
-	private int jwtExpirationMs;
+    @Value("${app.jwtExpirationMs}")
+    private int jwtExpirationMs;
 
-	public String generateJwtToken(Authentication authentication) {
+    public String generateJwtToken(Authentication authentication) {
 
-		UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
-		return Jwts.builder().setSubject((userPrincipal.getUsername())).setIssuedAt(new Date())
-				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-				.signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
-	}
+        return Jwts.builder().setSubject((userPrincipal.getUsername())).setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+    }
 
-	public boolean validateJwtToken(String jwt) {
-		try {
-			Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt);
-			return true;
-		} catch (MalformedJwtException e) {
-			System.err.println(e.getMessage());
-		} catch (IllegalArgumentException e) {
-			System.err.println(e.getMessage());
-		}
+    public boolean validateJwtToken(String jwt) {
+        try {
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt);
+            return true;
+        } catch (MalformedJwtException e) {
+            System.err.println(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public String getUserNameFromJwtToken(String jwt) {
-		return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt).getBody().getSubject();
-	}
+    public String getUserNameFromJwtToken(String jwt) {
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt).getBody().getSubject();
+    }
 
 }

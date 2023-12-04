@@ -7,17 +7,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
     private final UserTaskService userTaskService;
-    public Comment save(Comment comment){
+
+    public Comment save(Comment comment) {
         return commentRepository.save(comment);
     }
-    public List<Comment> findAllByTasksId(UserTask userTask){
+
+    public List<Comment> findAllByTasksId(UserTask userTask) {
         return commentRepository.findAllByTasksId(userTask);
     }
 }

@@ -29,91 +29,91 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class AuthController {
-	
-	@Autowired
-	AuthenticationManager authenticationManager;
-	
-	@Autowired
-	UserService userService;
-	
-	@Autowired
-	RoleService roleService;
-	
-	@Autowired
-	PasswordEncoder passwordEncoder;
-	
-	@Autowired
-	JwtUtils jwtUtils;
-	
-	@PostMapping("/signin")
-	public ResponseEntity<?> authUser(@RequestBody LoginRequest loginRequest) {
-		
-		Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(
-						loginRequest.getEmail(),
-						loginRequest.getPassword()));
-		
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = jwtUtils.generateJwtToken(authentication);
-		
-		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-		List<String> roles = userDetails.getAuthorities().stream()
-				.map(item -> item.getAuthority())
-				.collect(Collectors.toList());
-		
-		return ResponseEntity.ok(new JwtResponse(jwt, 
-				userDetails.getId(), 
-				userDetails.getUsername(),
-				roles));
-	}
-	
-	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest) {
-		if (userService.existsByEmail(signupRequest.getEmail())) {
-			return ResponseEntity
-					.badRequest()
-					.body(new MessageResponse("Error: email is exist"));
-		}
 
-		User user = new User(signupRequest.getEmail(),
-				passwordEncoder.encode(signupRequest.getPassword()));
-		
-		Set<String> reqRoles = signupRequest.getRoles();
-		Set<Role> roles = new HashSet<>();
-		
-		if (reqRoles == null) {
-			Role userRole = roleService
-					.findByName(ERole.ROLE_USER)
-					.orElseThrow(() -> new RuntimeException("Error, Role USER is not found"));
-			roles.add(userRole);
-		} else {
-			reqRoles.forEach(r -> {
-				switch (r) {
-				case "admin":
-					Role adminRole = roleService
-						.findByName(ERole.ROLE_ADMIN)
-						.orElseThrow(() -> new RuntimeException("Error, Role ADMIN is not found"));
-					roles.add(adminRole);
-					
-					break;
-				case "mod":
-					Role modRole = roleService
-						.findByName(ERole.ROLE_MODERATOR)
-						.orElseThrow(() -> new RuntimeException("Error, Role MODERATOR is not found"));
-					roles.add(modRole);
-					
-					break;
+    @Autowired
+    AuthenticationManager authenticationManager;
 
-				default:
-					Role userRole = roleService
-						.findByName(ERole.ROLE_USER)
-						.orElseThrow(() -> new RuntimeException("Error, Role USER is not found"));
-					roles.add(userRole);
-				}
-			});
-		}
-		user.setRoles(roles);
-		userService.save(user);
-		return ResponseEntity.ok(new MessageResponse("User CREATED"));
-	}
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    RoleService roleService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
+    JwtUtils jwtUtils;
+
+    @PostMapping("/signin")
+    public ResponseEntity<?> authUser(@RequestBody LoginRequest loginRequest) {
+
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(
+                        loginRequest.getEmail(),
+                        loginRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                userDetails.getId(),
+                userDetails.getUsername(),
+                roles));
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest) {
+        if (userService.existsByEmail(signupRequest.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: email is exist"));
+        }
+
+        User user = new User(signupRequest.getEmail(),
+                passwordEncoder.encode(signupRequest.getPassword()));
+
+        Set<String> reqRoles = signupRequest.getRoles();
+        Set<Role> roles = new HashSet<>();
+
+        if (reqRoles == null) {
+            Role userRole = roleService
+                    .findByName(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error, Role USER is not found"));
+            roles.add(userRole);
+        } else {
+            reqRoles.forEach(r -> {
+                switch (r) {
+                    case "admin":
+                        Role adminRole = roleService
+                                .findByName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error, Role ADMIN is not found"));
+                        roles.add(adminRole);
+
+                        break;
+                    case "mod":
+                        Role modRole = roleService
+                                .findByName(ERole.ROLE_MODERATOR)
+                                .orElseThrow(() -> new RuntimeException("Error, Role MODERATOR is not found"));
+                        roles.add(modRole);
+
+                        break;
+
+                    default:
+                        Role userRole = roleService
+                                .findByName(ERole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Error, Role USER is not found"));
+                        roles.add(userRole);
+                }
+            });
+        }
+        user.setRoles(roles);
+        userService.save(user);
+        return ResponseEntity.ok(new MessageResponse("User CREATED"));
+    }
 }

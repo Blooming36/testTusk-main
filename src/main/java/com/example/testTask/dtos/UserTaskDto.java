@@ -1,8 +1,5 @@
 package com.example.testTask.dtos;
 
-import com.example.testTask.models.taskModels.Prioritie;
-import com.example.testTask.models.taskModels.Status;
-import com.example.testTask.models.userModels.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

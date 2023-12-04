@@ -19,29 +19,36 @@ public class UserTaskService {
     private final UserTaskRepository userTaskRepository;
     private final UserService userService;
     private final UserRepository userRepository;
-    public UserTask save(UserTask userTask){
+
+    public UserTask save(UserTask userTask) {
         return userTaskRepository.save(userTask);
     }
-    public void setUserCreator(UserTask userTask, Long id){
+
+    public void setUserCreator(UserTask userTask, Long id) {
         userTask.setUserCreator(userService.findById(id).get());
     }
-    public Optional<UserTask> findById(Long id){
+
+    public Optional<UserTask> findById(Long id) {
         return userTaskRepository.findById(id);
     }
+
     public Page<UserTask> findAllByUserCreator(Long id, PageRequest pageRequest) {
         User user = userService.findById(id).get();
         return userTaskRepository.findAllByUserCreator(pageRequest, user);
     }
-    public UserTask updateUserExecutor(Long idUser, Long idTask){
+
+    public UserTask updateUserExecutor(Long idUser, Long idTask) {
         User user = userService.findById(idUser).get();
         UserTask userTask = findById(idTask).get();
         userTask.setUserExecutor(user);
         return save(userTask);
     }
-    public List<UserTask> findAllPage(PageRequest pageRequest){
+
+    public List<UserTask> findAllPage(PageRequest pageRequest) {
         return userTaskRepository.findAll(pageRequest).getContent();
     }
-    public void deleteById(Long id){
+
+    public void deleteById(Long id) {
         userTaskRepository.deleteById(id);
     }
 
@@ -49,6 +56,7 @@ public class UserTaskService {
         User user = userRepository.findByEmail(email).get();
         return userTaskRepository.findAllByUserCreator(pageable, user);
     }
+
     public Page<UserTask> findAllByUserNameExecuter(String email, Pageable pageable) {
         User user = userRepository.findByEmail(email).get();
         return userTaskRepository.findAllByUserExecutor(pageable, user);

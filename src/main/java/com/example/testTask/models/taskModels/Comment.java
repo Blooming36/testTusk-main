@@ -16,9 +16,7 @@ import javax.validation.constraints.NotNull;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long id;
-    @NotBlank
     private String textComments;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tasks_id")

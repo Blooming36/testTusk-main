@@ -12,7 +12,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RoleService {
     private final RoleRepository roleRepository;
-    public Optional<Role> findByName(ERole name){
+
+    public Optional<Role> findByName(ERole name) {
         return roleRepository.findByName(name);
     }
 }
